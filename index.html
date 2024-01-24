@@ -5,24 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shopping list example</title>
     <style>
+      body {
+        background-color: #373f51;
+        color: #d8dbe2;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+          sans-serif;
+        font-size: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh; /* Set the body to the full height of the viewport */
+        margin: 0; /* Remove default margin */
+      }
+      button {
+        font-size: 20px;
+        margin-left: 20px;
+        color: #373f51;
+        background-color: #daa49a;
+        border-color: grey;
+        border-radius: 5px;
+      }
       li {
         margin-bottom: 10px;
+        font-size: 20px;
       }
 
       li button {
-        font-size: 8px;
+        font-size: 12px;
+        font-style: italic;
         margin-left: 20px;
-        color: #666;
+        color: #daa49a;
+        background-color: #373f51;
+        border-color: #d8dbe2;
       }
     </style>
   </head>
   <body>
-    <h1>My shopping list</h1>
+    <h1>My Shopping List</h1>
 
     <div>
       <label for="item">Enter a new item:</label>
       <input type="text" name="item" id="item" />
-      <button>Add item</button>
+      <button>Add Item</button>
+      <p class="error-message" id="errorMessage"></p>
     </div>
 
     <ul></ul>
@@ -32,27 +59,48 @@
       const ul = document.querySelector("ul");
       const input = document.querySelector("input");
       const button = document.querySelector("button");
+      const errorMessage = document.getElementById("errorMessage");
+      const itemList = [];
 
       //creating a function to add items to the list
       function addItem() {
         let currentValue = input.value;
         input.value = "";
-        //Create three new elements — a list item (<li>), <span>, and <button>, and store them in variables.
+
+        // Check for duplicates
+        if (itemList.includes(currentValue)) {
+          errorMessage.textContent = "Item already exists in the list";
+          return; // Don't proceed to create the list item if it's a duplicate
+        } else {
+          errorMessage.textContent = ""; // Clear error message
+        }
+
         const listItem = document.createElement("li");
 
         const span = document.createElement("span");
         //adding text content
-        span.textContent = currentValue;
-        listItem.appendChild(span);
+        if (currentValue) {
+          span.textContent = currentValue;
+          listItem.appendChild(span);
+          errorMessage.textContent = ""; // Clears error message
+        } else {
+          errorMessage.textContent = "Please enter an item";
+          return;
+        }
 
         const deleteButton = document.createElement("button");
-        deleteButton.textContent = "Delete";
+        deleteButton.textContent = "Remove";
         deleteButton.addEventListener("click", function () {
           ul.removeChild(listItem);
+          let deleteIndex = itemList.indexOf(currentValue);
+          if (deleteIndex !== -1) {
+            itemList.splice(deleteIndex, 1);
+          }
         });
         listItem.appendChild(deleteButton);
 
         ul.appendChild(listItem);
+        itemList.push(currentValue);
         input.focus();
       }
       // Event listener for the "Add item" button click
