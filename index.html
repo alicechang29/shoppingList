@@ -32,25 +32,37 @@
       const ul = document.querySelector("ul");
       const input = document.querySelector("input");
       const button = document.querySelector("button");
-      button.addEventListener("click", function () {
+
+      //creating a function to add items to the list
+      function addItem() {
         let currentValue = input.value;
         input.value = "";
         //Create three new elements — a list item (<li>), <span>, and <button>, and store them in variables.
         const listItem = document.createElement("li");
+
         const span = document.createElement("span");
-        const deleteButton = document.createElement("button");
-        //Append the span and the button as children of the list item.
-        listItem.appendChild(span);
-        listItem.appendChild(deleteButton);
-        //Set the text content of the span to the input element value you saved earlier, and the text content of the button to 'Delete'.
+        //adding text content
         span.textContent = currentValue;
+        listItem.appendChild(span);
+
+        const deleteButton = document.createElement("button");
         deleteButton.textContent = "Delete";
-        ul.appendChild(listItem);
         deleteButton.addEventListener("click", function () {
           ul.removeChild(listItem);
         });
+        listItem.appendChild(deleteButton);
+
         ul.appendChild(listItem);
         input.focus();
+      }
+      // Event listener for the "Add item" button click
+      button.addEventListener("click", addItem);
+
+      // Event listener for the "Enter" key press on the input field
+      input.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+          addItem();
+        }
       });
     </script>
   </body>
